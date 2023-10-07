@@ -1,15 +1,8 @@
-import { useState } from "react";
 import "./Button.css";
 
-const Button = () => {
-  console.log("rerender"); // если мы выведем эту фразу - она выведется 2 раза
-  const [text, setText] = useState("Save");
-  const clicked = () => {
-    setText((t) => t + "!");
-    console.log(text);
-  };
+const Button = ({ text, onClick }) => {
   return (
-    <button onClick={clicked} className="button accent">
+    <button className="button accent" onClick={onClick}>
       {text}
     </button>
   );
