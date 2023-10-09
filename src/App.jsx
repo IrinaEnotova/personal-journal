@@ -1,6 +1,4 @@
 import "./App.css";
-import CardButton from "./components/CardButton/CardButton";
-import JournalItem from "./components/JournalItem/JournalItem";
 import LeftPanel from "./layouts/LeftPanel/LeftPanel";
 import Body from "./layouts/Body/Body";
 import Header from "./components/Header/Header";
@@ -10,13 +8,13 @@ import JournalForm from "./components/JournalForm/JournalForm";
 import { useState } from "react";
 
 const INITIAL_DATA = [
-  {
-    id: 1,
-    title: "Preparation for courses' update",
-    date: new Date(),
-    text: "The first version of text for Journal Item",
-  },
-  { id: 2, title: "Hiking in the mountains", date: new Date(), text: "The second item for Journal Item" },
+  // {
+  //   id: 1,
+  //   title: "Preparation for courses' update",
+  //   date: new Date(),
+  //   text: "The first version of text for Journal Item",
+  // },
+  // { id: 2, title: "Hiking in the mountains", date: new Date(), text: "The second item for Journal Item" },
 ];
 
 function App() {
@@ -26,8 +24,7 @@ function App() {
     setData((oldData) => [
       ...oldData,
       {
-        // увеличим предыдущий id на единицу
-        id: Math.max(...oldData.map((el) => el.id)) + 1,
+        id: oldData.length !== 0 ? Math.max(...oldData.map((el) => el.id)) + 1 : 1,
         title: item.title,
         date: new Date(item.date),
         text: item.text,
@@ -36,25 +33,12 @@ function App() {
     ]);
   };
 
-  const sortItems = (a, b) => {
-    if (a.date < b.date) {
-      return 1;
-    }
-    return -1;
-  };
-
   return (
     <div className="app">
       <LeftPanel>
         <Header />
         <JournalAddButton />
-        <JournalList>
-          {data.sort(sortItems).map((dataItem) => (
-            <CardButton key={dataItem.id}>
-              <JournalItem title={dataItem.title} text={dataItem.text} date={dataItem.date} />
-            </CardButton>
-          ))}
-        </JournalList>
+        <JournalList data={data} />
       </LeftPanel>
       <Body>
         <JournalForm addItem={addItem} />
