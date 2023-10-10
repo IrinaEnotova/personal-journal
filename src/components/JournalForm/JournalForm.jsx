@@ -1,29 +1,45 @@
 import classNames from "classnames";
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useRef } from "react";
 import Button from "../Button/Button";
 import { INITIAL_STATE, formReducer } from "./JournalFormState";
+import Input from "../Input/Input";
 import styles from "./JournalForm.module.css";
 
 const JournalForm = ({ addItem }) => {
-  // удалим useState и свяжем содержимое с валидацией через useReducer
   const [formState, dispatchForm] = useReducer(formReducer, INITIAL_STATE);
-  // можно деструктурировать наш formState, чтобы каждую зависимость можно было использовать в нужном месте
   const { isValid, isFormReadyToSubmit, values } = formState;
+  const titleRef = useRef();
+  const dateRef = useRef();
+  const textRef = useRef();
+
+  const focusError = (isValid) => {
+    // здесь логика должна быть таковой, что какой элемент первый невалиден, тот и будет в фокусе
+    switch (true) {
+      case !isValid.title:
+        titleRef.current.focus();
+        break;
+      case !isValid.date:
+        dateRef.current.focus();
+        break;
+      case !isValid.text:
+        textRef.current.focus();
+        break;
+    }
+  };
 
   useEffect(() => {
     let timerId;
     if (!isValid.date || isValid.title || !isValid.text) {
+      // для фокусировки на референсе
+      focusError(isValid);
       timerId = setTimeout(() => {
-        // заменим на useReducer
         dispatchForm({ type: "RESET_VALIDITY" });
       }, 2000);
     }
 
-    // для очистки таймаута\интервала
     return function () {
       clearTimeout(timerId);
     };
-    // здесь используем зависимость не от всего состояния, а только от того, валидна ли форма
   }, [isValid]);
 
   useEffect(() => {
@@ -33,7 +49,6 @@ const JournalForm = ({ addItem }) => {
     }
   }, [isFormReadyToSubmit, values, addItem]);
 
-  // здесь используется динамическая переменная, чтобы функция была универсальна для всех инпутов
   const onChange = (event) => {
     dispatchForm({ type: "SET_VALUE", payload: { [event.target.name]: event.target.value } });
   };
@@ -42,20 +57,21 @@ const JournalForm = ({ addItem }) => {
     event.preventDefault();
     const formData = new FormData(event.target);
     const formProps = Object.fromEntries(formData);
-    // проверку на валидность перед сабмитом перенесем в reducer
+
     dispatchForm({ type: "SUBMIT", payload: formProps });
-    // а функцию по добавлению перенесем в useEffect, который будет зависеть от флага isFormReadyToSubmit
   };
 
   return (
     <form className={`${styles["journal-form"]}`} onSubmit={addJournalItem}>
       <div>
-        <input
+        <Input
           type="text"
           name="title"
+          ref={titleRef}
           value={values.title}
           onChange={onChange}
-          className={classNames(styles["input-title"], { [styles.invalid]: !isValid.title })}
+          appearance="title"
+          isValid={isValid.title}
         />
       </div>
       <div className={styles["form-row"]}>
@@ -63,13 +79,14 @@ const JournalForm = ({ addItem }) => {
           <img src="/date.svg" alt="Date icon" />
           <span>Date</span>
         </label>
-        <input
+        <Input
           id="date"
           type="date"
+          ref={dateRef}
           name="date"
           value={values.date}
           onChange={onChange}
-          className={classNames(styles.input, { [styles.invalid]: !isValid.date })}
+          isValid={isValid.date}
         />
       </div>
       <div className={styles["form-row"]}>
@@ -77,10 +94,11 @@ const JournalForm = ({ addItem }) => {
           <img src="/tag.svg" alt="Tag icon" />
           <span>Tags</span>
         </label>
-        <input id="tag" type="text" name="tag" value={values.tag} onChange={onChange} className={styles.input} />
+        <Input id="tag" type="text" name="tag" value={values.tag} onChange={onChange} />
       </div>
       <textarea
         name="text"
+        ref={textRef}
         value={values.text}
         onChange={onChange}
         cols="30"
