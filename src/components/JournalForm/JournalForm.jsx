@@ -1,7 +1,13 @@
 import classNames from "classnames";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../Button/Button";
 import styles from "./JournalForm.module.css";
+
+const INITIAL_STATE = {
+  title: true,
+  date: true,
+  text: true,
+};
 
 const JournalForm = ({ addItem }) => {
   const [formValidState, setFormValidState] = useState({
@@ -14,6 +20,21 @@ const JournalForm = ({ addItem }) => {
   const inputChange = (event) => {
     setInputData(event.target.value);
   };
+
+  useEffect(() => {
+    let timerId;
+    if (!formValidState.date || formValidState.title || !formValidState.text) {
+      // если оставить только таймаут, то форма будет мерцать
+      timerId = setTimeout(() => {
+        setFormValidState(INITIAL_STATE);
+      }, 2000);
+    }
+
+    // для очистки таймаута\интервала
+    return function () {
+      clearTimeout(timerId);
+    };
+  }, [formValidState]);
 
   const addJournalItem = (event) => {
     event.preventDefault();
