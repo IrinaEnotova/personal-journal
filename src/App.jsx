@@ -6,6 +6,7 @@ import JournalList from "./components/JournalList/JournalList";
 import JournalAddButton from "./components/JournalAddButton/JournalAddButton";
 import JournalForm from "./components/JournalForm/JournalForm";
 import { useLocalStorage } from "./hooks/useLocalStorage.hook";
+import { UserContext } from "./context/userContext";
 
 function mapItems(data) {
   if (!data) return [];
@@ -29,16 +30,19 @@ function App() {
   };
 
   return (
-    <div className="app">
-      <LeftPanel>
-        <Header />
-        <JournalAddButton />
-        <JournalList data={mapItems(data)} />
-      </LeftPanel>
-      <Body>
-        <JournalForm addItem={addItem} />
-      </Body>
-    </div>
+    // в провайдере в value мы ДОЛЖНЫ установить дефолтные значения
+    <UserContext.Provider value={{ userId: 1 }}>
+      <div className="app">
+        <LeftPanel>
+          <Header />
+          <JournalAddButton />
+          <JournalList data={mapItems(data)} />
+        </LeftPanel>
+        <Body>
+          <JournalForm addItem={addItem} />
+        </Body>
+      </div>
+    </UserContext.Provider>
   );
 }
 
