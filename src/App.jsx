@@ -6,8 +6,7 @@ import JournalList from "./components/JournalList/JournalList";
 import JournalAddButton from "./components/JournalAddButton/JournalAddButton";
 import JournalForm from "./components/JournalForm/JournalForm";
 import { useLocalStorage } from "./hooks/useLocalStorage.hook";
-import { UserContext } from "./context/userContext";
-import { useState } from "react";
+import { UserContextProvider } from "./context/userContext";
 
 function mapItems(data) {
   if (!data) return [];
@@ -16,8 +15,6 @@ function mapItems(data) {
 
 function App() {
   const [data, setData] = useLocalStorage("data");
-  // создадим состояние для контекста
-  const [userId, setUserId] = useState(1);
 
   const addItem = (item) => {
     setData([
@@ -34,7 +31,7 @@ function App() {
 
   return (
     // сюда прокинем значение и функцию-сеттер
-    <UserContext.Provider value={{ userId, setUserId }}>
+    <UserContextProvider>
       <div className="app">
         <LeftPanel>
           <Header />
@@ -45,7 +42,7 @@ function App() {
           <JournalForm addItem={addItem} />
         </Body>
       </div>
-    </UserContext.Provider>
+    </UserContextProvider>
   );
 }
 
