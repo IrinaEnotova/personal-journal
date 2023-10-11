@@ -1,11 +1,23 @@
+import Logo from "../Logo/Logo";
 import SelectUser from "../SelectUser/SelectUser";
-import styles from "./Header.module.css";
+import Button from "../Button/Button";
+import { useCallback, useState } from "react";
+
+const logos = ["/logo.svg", "/mini-logo.png"];
 
 const Header = () => {
+  const [logoIndex, setLogoIndex] = useState(0);
+  console.log("Header!");
+
+  const toggleLogo = useCallback(() => {
+    setLogoIndex((state) => Number(!state));
+  }, []);
+
   return (
     <>
-      <img className={styles.logo} src="/logo.svg" alt="Logo of Journal" />
+      <Logo image={logos[logoIndex]} />
       <SelectUser />
+      <Button onClick={toggleLogo}>Change logo</Button>
     </>
   );
 };
