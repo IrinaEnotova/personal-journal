@@ -12,7 +12,6 @@ const JournalForm = ({ addItem }) => {
   const titleRef = useRef();
   const dateRef = useRef();
   const textRef = useRef();
-  // передаем в хук нужный нам контекст и в левой части выражения получим все необънодимые свойства
   const { userId } = useContext(UserContext);
 
   const focusError = (isValid) => {
@@ -32,7 +31,6 @@ const JournalForm = ({ addItem }) => {
   useEffect(() => {
     let timerId;
     if (!isValid.date || isValid.title || !isValid.text) {
-      // для фокусировки на референсе
       focusError(isValid);
       timerId = setTimeout(() => {
         dispatchForm({ type: "RESET_VALIDITY" });
@@ -46,10 +44,15 @@ const JournalForm = ({ addItem }) => {
 
   useEffect(() => {
     if (isFormReadyToSubmit) {
-      addItem(values);
+      addItem({ ...values, userId });
       dispatchForm({ type: "CLEAR" });
     }
-  }, [isFormReadyToSubmit, values, addItem]);
+  }, [isFormReadyToSubmit, values, addItem, userId]);
+
+  // создадим еще один useEffect, который будет триггериться при изменении userId
+  useEffect(() => {
+    dispatchForm({ type: "SET_VALUE", payload: { userId: userId } });
+  }, [userId]);
 
   const onChange = (event) => {
     dispatchForm({ type: "SET_VALUE", payload: { [event.target.name]: event.target.value } });
@@ -65,7 +68,6 @@ const JournalForm = ({ addItem }) => {
 
   return (
     <form className={`${styles["journal-form"]}`} onSubmit={addJournalItem}>
-      {userId}
       <div>
         <Input
           type="text"
@@ -108,7 +110,7 @@ const JournalForm = ({ addItem }) => {
         rows="10"
         className={classNames(styles.input, { [styles.invalid]: !isValid.text })}
       ></textarea>
-      <Button text="Save"></Button>
+      <Button>Save</Button>
     </form>
   );
 };

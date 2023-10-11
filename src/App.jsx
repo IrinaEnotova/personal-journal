@@ -20,17 +20,14 @@ function App() {
     setData([
       ...mapItems(data),
       {
-        id: data.length !== 0 ? Math.max(...data.map((el) => el.id)) + 1 : 1,
-        title: item.title,
+        ...item,
         date: new Date(item.date),
-        text: item.text,
-        tag: item.tag,
+        id: data.length !== 0 ? Math.max(...data.map((el) => el.id)) + 1 : 1,
       },
     ]);
   };
 
   return (
-    // сюда прокинем значение и функцию-сеттер
     <UserContextProvider>
       <div className="app">
         <LeftPanel>

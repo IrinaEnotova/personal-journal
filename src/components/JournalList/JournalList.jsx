@@ -1,8 +1,12 @@
+import { useContext } from "react";
 import CardButton from "../CardButton/CardButton";
 import JournalItem from "../JournalItem/JournalItem";
 import "./JournalList.css";
+import { UserContext } from "../../context/userContext";
 
 const JournalList = ({ data }) => {
+  const { userId } = useContext(UserContext);
+
   if (data.length === 0) {
     return <p>Add your first memory</p>;
   }
@@ -16,11 +20,14 @@ const JournalList = ({ data }) => {
 
   return (
     <>
-      {data.sort(sortItems).map((dataItem) => (
-        <CardButton key={dataItem.id}>
-          <JournalItem title={dataItem.title} text={dataItem.text} date={dataItem.date} />
-        </CardButton>
-      ))}
+      {data
+        .filter((el) => el.userId === userId)
+        .sort(sortItems)
+        .map((dataItem) => (
+          <CardButton key={dataItem.id}>
+            <JournalItem title={dataItem.title} text={dataItem.text} date={dataItem.date} />
+          </CardButton>
+        ))}
     </>
   );
 };
