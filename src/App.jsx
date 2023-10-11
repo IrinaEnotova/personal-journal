@@ -7,6 +7,7 @@ import JournalAddButton from "./components/JournalAddButton/JournalAddButton";
 import JournalForm from "./components/JournalForm/JournalForm";
 import { useLocalStorage } from "./hooks/useLocalStorage.hook";
 import { UserContext } from "./context/userContext";
+import { useState } from "react";
 
 function mapItems(data) {
   if (!data) return [];
@@ -15,6 +16,8 @@ function mapItems(data) {
 
 function App() {
   const [data, setData] = useLocalStorage("data");
+  // создадим состояние для контекста
+  const [userId, setUserId] = useState(1);
 
   const addItem = (item) => {
     setData([
@@ -30,8 +33,8 @@ function App() {
   };
 
   return (
-    // в провайдере в value мы ДОЛЖНЫ установить дефолтные значения
-    <UserContext.Provider value={{ userId: 1 }}>
+    // сюда прокинем значение и функцию-сеттер
+    <UserContext.Provider value={{ userId, setUserId }}>
       <div className="app">
         <LeftPanel>
           <Header />
