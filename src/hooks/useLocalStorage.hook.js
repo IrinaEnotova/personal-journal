@@ -7,6 +7,8 @@ export function useLocalStorage(key) {
     const res = JSON.parse(localStorage.getItem(key));
     if (res) {
       setData(res);
+    } else {
+      setData([]);
     }
   }, []);
 

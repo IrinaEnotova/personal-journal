@@ -40,6 +40,7 @@ function App() {
         }),
       ]);
     }
+    setSelectedItem(null);
   };
 
   const deleteItem = (id) => {
