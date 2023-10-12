@@ -6,7 +6,7 @@ import Input from "../Input/Input";
 import styles from "./JournalForm.module.css";
 import { UserContext } from "../../context/userContext";
 
-const JournalForm = ({ addItem }) => {
+const JournalForm = ({ addItem, data }) => {
   const [formState, dispatchForm] = useReducer(formReducer, INITIAL_STATE);
   const { isValid, isFormReadyToSubmit, values } = formState;
   const titleRef = useRef();
@@ -28,6 +28,12 @@ const JournalForm = ({ addItem }) => {
     }
   };
 
+  // для выбора элемента списка
+  useEffect(() => {
+    dispatchForm({ type: "SET_VALUE", payload: { ...data } });
+    console.log(data);
+  }, [data]);
+
   useEffect(() => {
     let timerId;
     if (!isValid.date || isValid.title || !isValid.text) {
@@ -46,6 +52,8 @@ const JournalForm = ({ addItem }) => {
     if (isFormReadyToSubmit) {
       addItem({ ...values, userId });
       dispatchForm({ type: "CLEAR" });
+      // чтобы не стерлись данные после установки текущей записи
+      dispatchForm({ type: "SET_VALUE", payload: { userId: userId } });
     }
   }, [isFormReadyToSubmit, values, addItem, userId]);
 
@@ -89,7 +97,7 @@ const JournalForm = ({ addItem }) => {
           type="date"
           ref={dateRef}
           name="date"
-          value={values.date}
+          value={values.date ? new Date(values.date).toISOString().slice(0, 10) : ""}
           onChange={onChange}
           isValid={isValid.date}
         />

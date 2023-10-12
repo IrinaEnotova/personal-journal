@@ -1,15 +1,11 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import CardButton from "../CardButton/CardButton";
 import JournalItem from "../JournalItem/JournalItem";
-import "./JournalList.css";
 import { UserContext } from "../../context/userContext";
+import "./JournalList.css";
 
-const JournalList = ({ data }) => {
+const JournalList = ({ data, setItem }) => {
   const { userId } = useContext(UserContext);
-
-  if (data.length === 0) {
-    return <p>Add your first memory</p>;
-  }
 
   const sortItems = (a, b) => {
     if (a.date < b.date) {
@@ -18,16 +14,20 @@ const JournalList = ({ data }) => {
     return -1;
   };
 
+  // вынесем из JSX логику по фильтрации и сортировке
+  const filteredData = useMemo(() => data.filter((el) => el.userId === userId).sort(sortItems), [data, userId]);
+
+  if (data.length === 0) {
+    return <p>Add your first memory</p>;
+  }
+
   return (
     <>
-      {data
-        .filter((el) => el.userId === userId)
-        .sort(sortItems)
-        .map((dataItem) => (
-          <CardButton key={dataItem.id}>
-            <JournalItem title={dataItem.title} text={dataItem.text} date={dataItem.date} />
-          </CardButton>
-        ))}
+      {filteredData.map((dataItem) => (
+        <CardButton key={dataItem.id} onClick={() => setItem(dataItem)}>
+          <JournalItem title={dataItem.title} text={dataItem.text} date={dataItem.date} />
+        </CardButton>
+      ))}
     </>
   );
 };

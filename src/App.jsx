@@ -7,6 +7,7 @@ import JournalAddButton from "./components/JournalAddButton/JournalAddButton";
 import JournalForm from "./components/JournalForm/JournalForm";
 import { useLocalStorage } from "./hooks/useLocalStorage.hook";
 import { UserContextProvider } from "./context/userContext";
+import { useState } from "react";
 
 function mapItems(data) {
   if (!data) return [];
@@ -15,16 +16,33 @@ function mapItems(data) {
 
 function App() {
   const [data, setData] = useLocalStorage("data");
+  const [selectedItem, setSelectedItem] = useState({});
 
   const addItem = (item) => {
-    setData([
-      ...mapItems(data),
-      {
-        ...item,
-        date: new Date(item.date),
-        id: data.length !== 0 ? Math.max(...data.map((el) => el.id)) + 1 : 1,
-      },
-    ]);
+    console.log(item);
+    if (!item.id) {
+      console.log("new");
+      setData([
+        ...mapItems(data),
+        {
+          ...item,
+          date: new Date(item.date),
+          id: data.length > 0 ? Math.max(...data.map((i) => i.id)) + 1 : 1,
+        },
+      ]);
+    } else {
+      console.log("update");
+      setData([
+        ...mapItems(data).map((i) => {
+          if (i.id === item.id) {
+            return {
+              ...item,
+            };
+          }
+          return i;
+        }),
+      ]);
+    }
   };
 
   return (
@@ -33,10 +51,10 @@ function App() {
         <LeftPanel>
           <Header />
           <JournalAddButton />
-          <JournalList data={mapItems(data)} />
+          <JournalList data={mapItems(data)} setItem={setSelectedItem} />
         </LeftPanel>
         <Body>
-          <JournalForm addItem={addItem} />
+          <JournalForm addItem={addItem} data={selectedItem} />
         </Body>
       </div>
     </UserContextProvider>
