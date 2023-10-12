@@ -29,9 +29,13 @@ const JournalForm = ({ addItem, data, onDelete }) => {
   };
 
   useEffect(() => {
+    if (!data) {
+      dispatchForm({ type: "CLEAR" });
+      dispatchForm({ type: "SET_VALUE", payload: { userId: userId } });
+    }
     dispatchForm({ type: "SET_VALUE", payload: { ...data } });
     console.log(data);
-  }, [data]);
+  }, [data, userId]);
 
   useEffect(() => {
     let timerId;
@@ -89,7 +93,7 @@ const JournalForm = ({ addItem, data, onDelete }) => {
           appearance="title"
           isValid={isValid.title}
         />
-        {data.id && (
+        {data?.id && (
           <button className={styles["delete"]} type="button" onClick={() => deleteJournalItem()}>
             <img src="/archive.svg" alt="Delete" />
           </button>
