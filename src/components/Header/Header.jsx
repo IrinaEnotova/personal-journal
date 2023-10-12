@@ -1,7 +1,7 @@
 import Logo from "../Logo/Logo";
 import SelectUser from "../SelectUser/SelectUser";
 
-const logos = ["/logo.svg", "/mini-logo.png"];
+const logos = ["./logo.svg", "./mini-logo.png"];
 
 const Header = () => {
   return (

@@ -95,13 +95,13 @@ const JournalForm = ({ addItem, data, onDelete }) => {
         />
         {data?.id && (
           <button className={styles["delete"]} type="button" onClick={() => deleteJournalItem()}>
-            <img src="/archive.svg" alt="Delete" />
+            <img src="./archive.svg" alt="Delete" />
           </button>
         )}
       </div>
       <div className={styles["form-row"]}>
         <label htmlFor="date" className={styles["form-labels"]}>
-          <img src="/date.svg" alt="Date icon" />
+          <img src="./date.svg" alt="Date icon" />
           <span>Date</span>
         </label>
         <Input
@@ -116,7 +116,7 @@ const JournalForm = ({ addItem, data, onDelete }) => {
       </div>
       <div className={styles["form-row"]}>
         <label htmlFor="tag" className={styles["form-labels"]}>
-          <img src="/tag.svg" alt="Tag icon" />
+          <img src="./tag.svg" alt="Tag icon" />
           <span>Tags</span>
         </label>
         <Input id="tag" type="text" name="tag" value={values.tag} onChange={onChange} />
