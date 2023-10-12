@@ -6,7 +6,7 @@ import Input from "../Input/Input";
 import styles from "./JournalForm.module.css";
 import { UserContext } from "../../context/userContext";
 
-const JournalForm = ({ addItem, data }) => {
+const JournalForm = ({ addItem, data, onDelete }) => {
   const [formState, dispatchForm] = useReducer(formReducer, INITIAL_STATE);
   const { isValid, isFormReadyToSubmit, values } = formState;
   const titleRef = useRef();
@@ -28,7 +28,6 @@ const JournalForm = ({ addItem, data }) => {
     }
   };
 
-  // для выбора элемента списка
   useEffect(() => {
     dispatchForm({ type: "SET_VALUE", payload: { ...data } });
     console.log(data);
@@ -52,12 +51,10 @@ const JournalForm = ({ addItem, data }) => {
     if (isFormReadyToSubmit) {
       addItem({ ...values, userId });
       dispatchForm({ type: "CLEAR" });
-      // чтобы не стерлись данные после установки текущей записи
       dispatchForm({ type: "SET_VALUE", payload: { userId: userId } });
     }
   }, [isFormReadyToSubmit, values, addItem, userId]);
 
-  // создадим еще один useEffect, который будет триггериться при изменении userId
   useEffect(() => {
     dispatchForm({ type: "SET_VALUE", payload: { userId: userId } });
   }, [userId]);
@@ -74,9 +71,15 @@ const JournalForm = ({ addItem, data }) => {
     dispatchForm({ type: "SUBMIT", payload: formProps });
   };
 
+  const deleteJournalItem = () => {
+    onDelete(data.id);
+    dispatchForm({ type: "CLEAR" });
+    dispatchForm({ type: "SET_VALUE", payload: { userId: userId } });
+  };
+
   return (
     <form className={`${styles["journal-form"]}`} onSubmit={addJournalItem}>
-      <div>
+      <div className={styles["form-row"]}>
         <Input
           type="text"
           name="title"
@@ -86,6 +89,11 @@ const JournalForm = ({ addItem, data }) => {
           appearance="title"
           isValid={isValid.title}
         />
+        {data.id && (
+          <button className={styles["delete"]} type="button" onClick={() => deleteJournalItem()}>
+            <img src="/archive.svg" alt="Delete" />
+          </button>
+        )}
       </div>
       <div className={styles["form-row"]}>
         <label htmlFor="date" className={styles["form-labels"]}>

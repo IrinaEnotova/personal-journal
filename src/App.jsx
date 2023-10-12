@@ -19,9 +19,7 @@ function App() {
   const [selectedItem, setSelectedItem] = useState({});
 
   const addItem = (item) => {
-    console.log(item);
     if (!item.id) {
-      console.log("new");
       setData([
         ...mapItems(data),
         {
@@ -31,7 +29,6 @@ function App() {
         },
       ]);
     } else {
-      console.log("update");
       setData([
         ...mapItems(data).map((i) => {
           if (i.id === item.id) {
@@ -45,6 +42,10 @@ function App() {
     }
   };
 
+  const deleteItem = (id) => {
+    setData([...data.filter((i) => i.id !== id)]);
+  };
+
   return (
     <UserContextProvider>
       <div className="app">
@@ -54,7 +55,7 @@ function App() {
           <JournalList data={mapItems(data)} setItem={setSelectedItem} />
         </LeftPanel>
         <Body>
-          <JournalForm addItem={addItem} data={selectedItem} />
+          <JournalForm addItem={addItem} data={selectedItem} onDelete={deleteItem} />
         </Body>
       </div>
     </UserContextProvider>
