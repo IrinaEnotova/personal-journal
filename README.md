@@ -1,8 +1,33 @@
-# React + Vite
+#  📔 Personal Journal
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Users can:
+- add notes
+- update notes
+- delete notes
 
-Currently, two official plugins are available:
+## 📚 Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**Client:** Vite, React, Prettier, ESLint
+
+## 🚀 Getting Started
+
+You can use [build version](https://irinaenotova.github.io/personal-journal/)
+
+Or to get started you can simply clone this `personal-journal` repository and install the dependencies.
+
+Clone the `personal-journal` repository using git:
+
+```
+git clone https://github.com/IrinaEnotova/personal-journal.git
+cd personal-journal
+```
+Install dependencies with this command:
+
+```
+npm install
+```
+Run the application with this command:
+```
+npm run dev
+```
+
